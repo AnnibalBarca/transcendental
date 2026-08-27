@@ -1,0 +1,125 @@
+.playerCard
+{
+	display: flex;
+
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	position: relative;
+
+	width: 90%;
+	max-width: 400px;
+	height: 70px;
+
+	gap: 10px;
+
+	margin-top: 15px;
+	margin-bottom: 20px;
+	margin-left: auto;
+	margin-right: auto;
+
+	color: white;
+}
+
+.cardBg
+{
+	position: relative;
+	overflow: hidden;
+	flex: 1;
+	align-self: stretch;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	padding-left: 10px;
+	padding-right: 10px;
+
+	border-radius: 4px;
+	border: 1px solid rgba(96, 165, 250, 0.25);
+
+	background: linear-gradient(135deg, #1e3a8a, #172554, #020617);
+}
+
+.texture {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background-size: 300%;
+	background-position: center 20%;
+	opacity: 0.5;
+	mix-blend-mode: screen;
+	filter: grayscale(100%);
+}
+
+.player
+{
+	position: relative;
+	z-index: 1;
+
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.playerInfo
+{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	text-align: left;
+}
+
+.playerIcon
+{
+	width: 55px;
+	height: 55px;
+	aspect-ratio: 1 / 1;
+	background-color: #000000;
+	border-radius: 50%;
+	padding: 5px;
+	border: 2px solid #60a5fa;
+}
+
+.playerRanking
+{
+	font-size: 0.8rem;
+	font-weight: bold;
+}
+
+.playerName
+{
+	font-weight: 600;
+	margin: 0;
+}
+
+.timer
+{
+	position: relative;
+	z-index: 1;
+	margin-left: auto;
+	font-size: 1.5rem;
+	font-weight: bolder;
+}
+
+.activeTurn .cardBg
+{
+	border: 2px solid #60a5fa;
+	box-shadow: 0 0 12px rgba(96, 165, 250, 0.35);
+}
+
+.activeTurn .timer
+{
+	color: #60a5fa;
+}
+
+@media (max-width: 768px) {
+	.playerCard {
+		height: 70px;
+	}
+	.playerIcon {
+		width: 54px;
+		height: 54px;
+	}
+}

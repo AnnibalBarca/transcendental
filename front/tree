@@ -1,0 +1,43 @@
+src/
+├── app/
+│   ├── router/
+│   ├── providers/
+│   └── store/
+│
+├── pages/
+│   ├── Home/
+│   ├── Profile/
+│   └── Game/
+│
+├── features/
+│   ├── auth/
+│   ├── inventory/
+│   ├── combat/
+│   └── settings/
+│
+├── components/
+│   ├── ui/
+│   ├── layout/
+│   └── common/
+│
+├── hooks/
+├── services/
+├── utils/
+├── assets/
+│   ├── images/
+│   ├── sounds/
+│   ├── fonts/
+│   └── styles/
+│
+├── types/
+└── main.tsx
+
+assets/styles:
+
+	- globals.css
+		global background ;
+		font-family ;
+		base colors ;
+		body ;
+		scrollbar ;
+		theme ;

@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="#2E1C12" stroke="#CD7F32" stroke-width="4" stroke-linejoin="round"/>
+  <polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="none" stroke="#CD7F32" stroke-width="2" stroke-linejoin="round" opacity="0.6"/>
+  <!-- Pion avec double socle, réduit -->
+  <g transform="translate(17.5, 17.5) scale(0.65)">
+    <path d="M 30,75 L 70,75 M 35,68 L 65,68 M 40,68 L 45,55 C 45,45 55,45 55,55 L 60,68 M 50,45 A 9,9 0 1 0 50,27 A 9,9 0 1 0 50,45 Z" fill="none" stroke="#CD7F32" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+pub mod accept_friend_request;
+pub mod block_friend;
+pub mod cancel_friend_request;
+pub mod get_blocked_list;
+pub mod get_friend_message;
+pub mod get_friend_request;
+pub mod get_friends_list;
+pub mod get_sent_requests;
+pub mod mark_messages_as_read;
+pub mod refuse_friend_request;
+pub mod remove_friend;
+pub mod send_friend_message;
+pub mod send_friend_request;
+pub mod unblock_friend;
+pub mod health;

@@ -1,0 +1,140 @@
+.container {
+	padding: 24px;
+	color: #fff;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.status {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 16px;
+	font-size: 14px;
+}
+
+.dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+}
+
+.dotOnline {
+	background: #4ade80;
+	box-shadow: 0 0 6px rgba(74, 222, 128, 0.4);
+}
+
+.dotOffline {
+	background: #f87171;
+	box-shadow: 0 0 6px rgba(248, 113, 113, 0.4);
+}
+
+.error {
+	color: #f87171;
+}
+
+.inputRow {
+	display: flex;
+	gap: 12px;
+	margin-bottom: 24px;
+}
+
+.textarea {
+	flex: 1;
+	background: #101522;
+	border: 1px solid #0b3140;
+	border-radius: 8px;
+	padding: 12px;
+	color: #fff;
+	font-family: monospace;
+	font-size: 13px;
+	resize: vertical;
+	outline: none;
+}
+
+.textarea:focus {
+	border-color: #06b6d4;
+}
+
+.sendBtn {
+	padding: 12px 24px;
+	background: #06b6d4;
+	border: none;
+	border-radius: 8px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 150ms;
+	align-self: flex-start;
+}
+
+.sendBtn:hover:not(:disabled) {
+	background: #0891b2;
+}
+
+.sendBtn:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.messagesHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12px;
+}
+
+.messagesHeader h2 {
+	font-size: 16px;
+	margin: 0;
+}
+
+.clearBtn {
+	padding: 6px 14px;
+	background: rgba(248, 113, 113, 0.12);
+	color: #f87171;
+	border: none;
+	border-radius: 6px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.clearBtn:hover {
+	background: rgba(248, 113, 113, 0.22);
+}
+
+.messages {
+	background: #101522;
+	border: 1px solid #0b3140;
+	border-radius: 8px;
+	padding: 16px;
+	max-height: 400px;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column-reverse;
+	scroll-behavior: smooth;
+}
+
+.empty {
+	color: rgba(255, 255, 255, 0.3);
+	font-size: 13px;
+	margin: 0;
+}
+
+.message {
+	background: #080b14;
+	border: 1px solid #0b3140;
+	border-radius: 6px;
+	padding: 12px;
+	margin: 0 0 8px 0;
+	font-family: monospace;
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.85);
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.message:last-child {
+	margin-bottom: 0;
+}

@@ -1,0 +1,26 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: Discord
+    receivers:
+      - uid: cfull16d8dw5cd
+        type: discord
+        disableResolveMessage: false
+        settings:
+          url: '${DISCORD_WEBHOOK_URL}'
+          use_discord_username: true
+          title: >-
+            {{ if eq .Status "firing" }}:rotating_light: ALERT{{ else }}:white_check_mark: RESOLVED{{ end }} — {{ .CommonLabels.alertname }}
+          message: |
+            {{ if eq .Status "firing" }}## :fire: Alert triggered{{ else }}## :white_check_mark: Alert resolved{{ end }}
+
+            **Alert:** {{ .CommonLabels.alertname }}
+            **Status:** {{ if eq .Status "firing" }}:red_circle: Firing{{ else }}:green_circle: Resolved{{ end }}
+
+            {{ range .Alerts }}{{ if eq .Labels.alertname "DatasourceNoData" }}:warning: **No data received from datasource** — unable to evaluate this rule (Prometheus unreachable, target down, or network outage).
+            {{ if .Labels.rulename }}**Rule concerned:** {{ .Labels.rulename }}
+            {{ end }}{{ else }}**Host:** {{ if .Labels.nodename }}{{ .Labels.nodename }}{{ else if .Labels.instance }}{{ .Labels.instance }}{{ else }}:warning: unknown{{ end }}
+            **Job:** {{ if .Labels.job }}{{ .Labels.job }}{{ else }}:warning: unknown{{ end }}
+            {{ with .Annotations.summary }}**Summary:** {{ . }}
+            {{ end }}{{ end }}{{ end }}
+            :link: **View in Grafana:** {{ .ExternalURL }}

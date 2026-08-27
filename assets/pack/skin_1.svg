@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <!-- Dégradés -->
+    <linearGradient id="packGradCosm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff007f" />
+      <stop offset="100%" stop-color="#7a00ff" />
+    </linearGradient>
+    <linearGradient id="itemGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="100%" stop-color="#4facfe" />
+    </linearGradient>
+  </defs>
+
+  <!-- Effet d'explosion (teinte rosée) -->
+  <path d="M60 10 L65 30 L85 25 L75 40 L95 50 L75 60 L85 75 L65 70 L60 90 L55 70 L35 75 L45 60 L25 50 L45 40 L35 25 L55 30 Z" fill="#ffb6c1" opacity="0.6"/>
+
+  <!-- Objet Cosmétique (T-shirt / Skin) qui sort du sachet -->
+  <g transform="translate(60, 45)">
+    <path d="M-15,-10 L-25,0 L-15,10 L-10,5 L-10,25 L10,25 L10,5 L15,10 L25,0 L15,-10 L5,-15 L0,-10 L-5,-15 Z" fill="url(#itemGrad)" stroke="#333" stroke-width="1.5"/>
+    <!-- Petites étoiles de brillance autour -->
+    <circle cx="-18" cy="-15" r="2" fill="#fff"/>
+    <circle cx="18" cy="18" r="1.5" fill="#fff"/>
+    <circle cx="2" cy="12" r="3" fill="#fff" opacity="0.3"/>
+  </g>
+
+  <!-- Sachet déchiré -->
+  <path d="M 30,100 L 30,60 L 40,55 L 50,62 L 60,54 L 70,62 L 80,55 L 90,60 L 90,100 Z" fill="url(#packGradCosm)" stroke="#333" stroke-width="1.5"/>
+  <path d="M 30,65 L 90,65" stroke="#fff" stroke-width="2" stroke-dasharray="4" opacity="0.5"/>
+
+  <!-- Badge 1 -->
+  <circle cx="85" cy="85" r="14" fill="#333" stroke="#fff" stroke-width="2"/>
+  <text x="85" y="90.5" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#fff" text-anchor="middle">1</text>
+</svg>

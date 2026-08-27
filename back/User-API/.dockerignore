@@ -1,0 +1,17 @@
+# Git
+.git
+.gitignore
+
+# Rust
+target/
+**/*.rs.bk
+
+# Node / JS
+node_modules/
+dist/
+build/
+npm-debug.log
+yarn-error.log
+
+# Fichiers d'environnement locaux
+.env

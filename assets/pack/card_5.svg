@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <!-- Dégradés -->
+    <linearGradient id="packGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8e2de2" />
+      <stop offset="100%" stop-color="#4a00e0" />
+    </linearGradient>
+    <linearGradient id="cardGrad5" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0e0e0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Effet d'explosion élargi -->
+  <path d="M60 5 L68 25 L90 20 L80 38 L100 50 L80 62 L90 80 L68 75 L60 95 L52 75 L30 80 L40 62 L20 50 L40 38 L30 20 L52 25 Z" fill="#ffea00" opacity="0.6"/>
+
+  <!-- Déploiement des 5 cartes -->
+  <!-- Carte 1 -->
+  <g transform="translate(60,60) rotate(-40) translate(-60,-60)">
+    <rect x="40" y="25" width="40" height="55" rx="3" fill="url(#cardGrad5)" stroke="#333" stroke-width="1.5"/>
+    <rect x="44" y="29" width="32" height="47" rx="1" fill="#fff" stroke="#ccc" stroke-width="0.5"/>
+    <path d="M 60,35 L 70,55 L 50,55 Z" fill="#9b59b6"/>
+  </g>
+  <!-- Carte 2 -->
+  <g transform="translate(60,60) rotate(-20) translate(-60,-60)">
+    <rect x="40" y="25" width="40" height="55" rx="3" fill="url(#cardGrad5)" stroke="#333" stroke-width="1.5"/>
+    <rect x="44" y="29" width="32" height="47" rx="1" fill="#fff" stroke="#ccc" stroke-width="0.5"/>
+    <circle cx="60" cy="45" r="8" fill="#4a90e2"/>
+  </g>
+  <!-- Carte 3 -->
+  <g transform="translate(60,60) rotate(0) translate(-60,-60)">
+    <rect x="40" y="25" width="40" height="55" rx="3" fill="url(#cardGrad5)" stroke="#333" stroke-width="1.5"/>
+    <rect x="44" y="29" width="32" height="47" rx="1" fill="#fff" stroke="#ccc" stroke-width="0.5"/>
+    <rect x="52" y="37" width="16" height="16" fill="#f1c40f"/>
+  </g>
+  <!-- Carte 4 -->
+  <g transform="translate(60,60) rotate(20) translate(-60,-60)">
+    <rect x="40" y="25" width="40" height="55" rx="3" fill="url(#cardGrad5)" stroke="#333" stroke-width="1.5"/>
+    <rect x="44" y="29" width="32" height="47" rx="1" fill="#fff" stroke="#ccc" stroke-width="0.5"/>
+    <circle cx="60" cy="45" r="8" fill="#e74c3c"/>
+  </g>
+  <!-- Carte 5 -->
+  <g transform="translate(60,60) rotate(40) translate(-60,-60)">
+    <rect x="40" y="25" width="40" height="55" rx="3" fill="url(#cardGrad5)" stroke="#333" stroke-width="1.5"/>
+    <rect x="44" y="29" width="32" height="47" rx="1" fill="#fff" stroke="#ccc" stroke-width="0.5"/>
+    <path d="M 60,35 L 70,55 L 50,55 Z" fill="#2ecc71"/>
+  </g>
+
+  <!-- Sachet déchiré (légèrement plus large au sommet) -->
+  <path d="M 25,100 L 25,60 L 35,53 L 45,61 L 60,51 L 75,61 L 85,53 L 95,60 L 95,100 Z" fill="url(#packGrad5)" stroke="#333" stroke-width="1.5"/>
+  <path d="M 25,65 L 95,65" stroke="#fff" stroke-width="2" stroke-dasharray="4" opacity="0.5"/>
+
+  <!-- Badge 5 -->
+  <circle cx="85" cy="85" r="14" fill="#333" stroke="#fff" stroke-width="2"/>
+  <text x="85" y="90.5" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#fff" text-anchor="middle">5</text>
+</svg>

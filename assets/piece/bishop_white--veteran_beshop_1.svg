@@ -1,0 +1,23 @@
+<svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g fill="#F2DCC8" stroke="#000" stroke-width="1.5" stroke-linejoin="round">
+<circle cx="22.5" cy="8" r="2.5"/>
+<path d="M 15,32 C 17.5,34.5 27.5,34.5 30,32 C 30.5,30.5 30,30 30,30 C 30,27.5 27.5,26 27.5,26 C 33,24.5 33.5,14.5 22.5,10.5 C 11.5,14.5 12,24.5 17.5,26 C 17.5,26 15,27.5 15,30 C 15,30 14.5,30.5 15,32 Z"/>
+<path d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.646,38.99 6.677,38.97 6,38 C 7.354,36.06 9,36 9,36 Z"/>
+</g>
+<g fill="none" stroke="#A67C1E" stroke-width="1.5" stroke-linecap="round">
+<path d="M 17.5,26 L 27.5,26"/>
+<path d="M 15.0,30 L 30.0,30"/>
+<path d="M 22.5,15 L 22.5,22 M 20,17.5 L 25,17.5"/>
+</g>
+<!-- mitre finial cross and gold band -->
+<path d="M 22.5,3 L 22.5,5.3 M 21.3,4 L 23.7,4" stroke="#A67C1E" stroke-width="0.5" stroke-linecap="round"/>
+<path d="M 19.9,7.3 A 2.7,2.7 0 0 1 25.1,7.3" fill="none" stroke="#A67C1E" stroke-width="0.5" stroke-linecap="round"/>
+<!-- cardinal robe folds -->
+<path d="M 17,30 L 20,27.5" stroke="#C9A876" stroke-width="0.4" stroke-linecap="round"/>
+<path d="M 28,30 L 25,27.5" stroke="#C9A876" stroke-width="0.4" stroke-linecap="round"/>
+<path d="M 18,33.5 L 20.5,31.5" stroke="#C9A876" stroke-width="0.4" stroke-linecap="round"/>
+<path d="M 27,33.5 L 24.5,31.5" stroke="#C9A876" stroke-width="0.4" stroke-linecap="round"/>
+<!-- campaign chevrons -->
+<path d="M 16,37 L 19,35 L 22,37" fill="none" stroke="#A67C1E" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 23,37 L 26,35 L 29,37" fill="none" stroke="#A67C1E" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

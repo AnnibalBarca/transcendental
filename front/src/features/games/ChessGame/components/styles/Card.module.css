@@ -1,0 +1,173 @@
+.card.unZoomed {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: blue;
+    position: relative;
+    overflow: hidden;
+    width: clamp(64px, 11vw, 130px);
+    height: auto;
+    aspect-ratio: 2 / 3;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    transform-origin: bottom center;
+    margin-left: clamp(-30px, -3.5vw, -18px);
+    transition: transform 0.2s ease, margin 0.2s ease;
+	background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.295);
+    background-blend-mode: multiply;
+}
+
+.cardBg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+
+	-webkit-user-drag: none;
+	user-drag: none;
+}
+
+.cardDarken {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.32);
+    pointer-events: none;
+}
+
+.cardHeader,
+.cardDescription {
+    position: relative;
+    z-index: 1;
+}
+
+.card:first-child.unZoomed {
+    margin-left: 0;
+}
+
+.cardHeader.unZoomed {
+    display: flex;
+    height: 16px;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardTitle.unZoomed {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    color: rgb(251, 255, 0);
+    text-transform: uppercase;
+    font-size: 0.5rem;
+    text-align: center;
+}
+
+.card:nth-child(1).unZoomed { 
+    transform: rotate(-20deg) translateY(0px); 
+    z-index: 1;
+}
+.card:nth-child(2).unZoomed { 
+    transform: rotate(-10deg) translateY(-10%); 
+    z-index: 2;
+}
+.card:nth-child(3).unZoomed { 
+    transform: rotate(0deg) translateY(-14%);
+    z-index: 3;
+}
+.card:nth-child(4).unZoomed { 
+    transform: rotate(10deg) translateY(-10%); 
+    z-index: 4;
+}
+.card:nth-child(5).unZoomed { 
+    transform: rotate(20deg) translateY(0px); 
+    z-index: 5;
+}
+
+.card:hover.unZoomed {
+    transform: translateY(-30%) rotate(0deg) scale(1.15) !important;
+    
+    z-index: 10;
+    
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    
+}
+
+@media (max-width: 768px) {
+    .card.unZoomed {
+        width: clamp(64px, 18vw, 100px);
+        margin-left: clamp(-22px, -3.5vw, -18px);
+    }
+}
+
+.card.zoom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+	flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+
+    background-color: blue;
+    
+	width: min(70vmin, 400px);
+    aspect-ratio: 2 / 3;
+
+    border: 1px solid white;
+    border-radius: 5px;
+    
+	cursor: pointer;
+    
+	transition: transform 0.2s ease, margin 0.2s ease;
+	
+	background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.76);
+    background-blend-mode: multiply;
+}
+
+.card:first-child.zoom {
+    margin-left: 0;
+}
+
+.cardHeader.zoom {
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardTitle.zoom {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    color: rgb(251, 255, 0);
+    text-transform: uppercase;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.card:hover.zoom {
+    transform: translateY(-10px)  !important;
+    
+    z-index: 10;
+    
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.cardDescription>p {
+	color: aliceblue;
+	text-align: center;
+}	
+
+.cardDescription {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}

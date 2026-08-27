@@ -1,0 +1,456 @@
+include:
+  - infra/metrics/elk/docker-compose.yml
+  - infra/metrics/monitoring/docker-compose.yml
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-ft_transcendence}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis_db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - redisdata:/data
+    networks:
+      - transcendence-net
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    container_name: adminer_ui
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${ADMINER_PORT}:8080"
+    networks:
+      - transcendence-net
+
+  gateway:
+    build:
+      context: back
+      dockerfile: Gateway-API/Dockerfile
+    container_name: gateway_service
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${GATEWAY_API_PORT}:${GATEWAY_API_PORT}"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${GATEWAY_API_PORT}/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      SERVICE_NAME: gateway
+      API_PORT: ${GATEWAY_API_PORT}
+      REDIS_URL: ${REDIS_URL}
+      AUTH_API_URL: ${AUTH_API_URL}
+      NOTIFICATION_API_URL: ${NOTIFICATION_API_URL}
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  auth:
+    build:
+      context: back
+      dockerfile: Auth-API/Dockerfile
+    container_name: auth_service
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${AUTH_API_PORT}:${AUTH_API_PORT}"
+      - "127.0.0.1:9101:9101"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${AUTH_API_PORT}/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      SERVICE_NAME: auth
+      API_PORT: ${AUTH_API_PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      REDIS_PORT: ${REDIS_PORT}
+      METRICS_MANAGER_URL: ${METRICS_MANAGER_URL}
+      ROUTER_METRICS_PORT: 9101
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-https://${DOMAIN_NAME}/login/google}
+      FRONTEND_REDIRECT_URL: ${FRONTEND_REDIRECT_URL:-/}
+      FT_CLIENT_ID: ${FT_CLIENT_ID}
+      FT_CLIENT_SECRET: ${FT_CLIENT_SECRET}
+      FT_REDIRECT_URI: ${FT_REDIRECT_URI:-https://${DOMAIN_NAME}/api/auth/42/callback}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      DOMAIN_EMAIL: ${DOMAIN_EMAIL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_BIO: ${ADMIN_BIO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  user:
+    build:
+      context: back
+      dockerfile: User-API/Dockerfile
+    container_name: user_service
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:9102:9102"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9102/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    environment:
+      SERVICE_NAME: user
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      ROUTER_METRICS_PORT: 9102
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_PUBLIC_ENDPOINT: https://${DOMAIN_NAME}/img
+      MINIO_SHOP_BUCKET: ${MINIO_SHOP_BUCKET:-cosmetics}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  chess-1:
+    build:
+      context: back
+      dockerfile: Chess-API/Dockerfile
+    container_name: chess_service_1
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8082:8082"
+      - "127.0.0.1:9103:9103"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9103/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      SERVICE_NAME: chess
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      CHESS_WS_PORT: 8082
+      CHESS_INSTANCE_ID: chess-1
+      CHESS_PUBLIC_WS_URL: wss://${DOMAIN_NAME}/chess-1
+      ROUTER_METRICS_PORT: 9103
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  chess-2:
+    build:
+      context: back
+      dockerfile: Chess-API/Dockerfile
+    container_name: chess_service_2
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8083:8082"
+      - "127.0.0.1:9104:9104"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9104/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      SERVICE_NAME: chess
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      CHESS_WS_PORT: 8082
+      CHESS_INSTANCE_ID: chess-2
+      CHESS_PUBLIC_WS_URL: wss://${DOMAIN_NAME}/chess-2
+      ROUTER_METRICS_PORT: 9104
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  room:
+    build:
+      context: back
+      dockerfile: Room-API/Dockerfile
+    container_name: room_service
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${ROOM_API_PORT:-8003}:${ROOM_API_PORT:-8003}"
+      - "127.0.0.1:9105:9105"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9105/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      SERVICE_NAME: room
+      API_PORT: ${ROOM_API_PORT:-8003}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      ROUTER_METRICS_PORT: 9105
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  social:
+    build:
+      context: back
+      dockerfile: Social-API/Dockerfile
+    container_name: social_service
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${SOCIAL_API_PORT:-4004}:${SOCIAL_API_PORT:-4004}"
+      - "127.0.0.1:9106:9106"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9106/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      SERVICE_NAME: social
+      API_PORT: ${SOCIAL_API_PORT:-8003}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      ROUTER_METRICS_PORT: 9106
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  notification:
+    build:
+      context: back
+      dockerfile: Notification-API/Dockerfile
+      args:
+        SHARED_CONTEXT: "true"
+    container_name: notification_service
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${NOTIFICATION_API_PORT:-4005}:${NOTIFICATION_API_PORT:-4005}"
+    networks:
+      - transcendence-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${NOTIFICATION_API_PORT:-3006}/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    environment:
+      SERVICE_NAME: notification
+      NOTIFICATION_API_PORT: ${NOTIFICATION_API_PORT:-3006}
+      REDIS_URL: ${REDIS_URL}
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: frontend_dev
+    restart: always
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    networks:
+      - transcendence-net
+    environment:
+      VITE_API_URL: ${FRONTEND_URL:-}
+      VITE_IMAGE_MINIO: ${MINIO_PUBLIC_ENDPOINT}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost}
+
+  nginx:
+    build:
+      context: .
+      dockerfile: infra/Nginx/Dockerfile
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - transcendence-net
+      - monitoring
+      - elk
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    depends_on:
+      gateway:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+      chess-1:
+        condition: service_healthy
+      chess-2:
+        condition: service_healthy
+      room:
+        condition: service_healthy
+      kibana:
+        condition: service_started
+      grafana:
+        condition: service_started
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio_storage
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-password123}
+    volumes:
+      - minio_data:/data
+    networks:
+      - transcendence-net
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  mc-public:
+    image: minio/mc
+    container_name: minio_mc_public
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - transcendence-net
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set myminio http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
+      while true; do
+        mc ls myminio | while read -r line; do
+          b=\"$${line##* }\";
+          b=\"$${b%/}\";
+          echo \"Setting public on bucket: $$b\";
+          mc anonymous set public myminio/$$b;
+        done;
+        sleep 60;
+      done
+      "
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared_tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - transcendence-net
+    depends_on:
+      nginx:
+        condition: service_healthy
+
+  scalar_doc:
+    image: scalarapi/api-reference:latest
+    container_name: scalar_api_docs
+    restart: always
+    ports:
+      - "127.0.0.1:5050:8080"
+    volumes:
+      - ./documentation:/docs
+    environment:
+      API_REFERENCE_CONFIG: '{"sources":[{"url":"/openapi/openapi.json"}]}'
+    networks:
+      - transcendence-net
+
+volumes:
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local
+  minio_data:
+    driver: local
+
+networks:
+  transcendence-net:
+    driver: bridge

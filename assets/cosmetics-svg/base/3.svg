@@ -1,0 +1,20 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+<defs><clipPath id="bodyClip"><path d="M128,40 C97,42 74,64 71,100 C50,122 42,168 42,256 L214,256 C214,168 206,122 185,100 C182,64 159,42 128,40 Z"/></clipPath></defs>
+<g clip-path="url(#bodyClip)">
+  <path d="M128,40 C97,42 74,64 71,100 C50,122 42,168 42,256 L214,256 C214,168 206,122 185,100 C182,64 159,42 128,40 Z" fill="#7a2323"/>
+  <polygon points="30,256 30,150 70,110 75,180 50,256" fill="#3a1416" opacity="0.94"/>
+<polygon points="40,256 75,180 70,110 100,140 95,256" fill="#7a2323" opacity="0.94"/>
+<polygon points="95,256 100,140 128,170 128,256" fill="#3a1416" opacity="0.94"/>
+<polygon points="128,256 128,170 156,140 165,256" fill="#7a2323" opacity="0.94"/>
+<polygon points="165,256 156,140 186,110 190,180 226,256" fill="#d85c36" opacity="0.94"/>
+<polygon points="190,180 186,110 226,150 226,256" fill="#3a1416" opacity="0.94"/>
+<polygon points="71,100 90,60 110,80 95,120" fill="#d85c36" opacity="0.94"/>
+<polygon points="90,60 128,40 140,70 110,80" fill="#7a2323" opacity="0.94"/>
+<polygon points="140,70 128,40 166,60 146,90" fill="#3a1416" opacity="0.94"/>
+<polygon points="166,60 185,100 160,120 146,90" fill="#7a2323" opacity="0.94"/>
+<polygon points="95,120 110,80 146,90 150,130 120,140" fill="#f2a35c" opacity="0.94"/>
+  <ellipse cx="128" cy="97" rx="33" ry="41" fill="#170707"/>
+  <path d="M71,100 C74,64 97,42 128,40" fill="none" stroke="#ff8a4a" stroke-width="3" opacity="0.85" stroke-linecap="round"/>
+</g>
+<path d="M128,40 C97,42 74,64 71,100 C50,122 42,168 42,256 L214,256 C214,168 206,122 185,100 C182,64 159,42 128,40 Z" fill="none" stroke="#200a0a" stroke-width="4" stroke-linejoin="round"/>
+</svg>

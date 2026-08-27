@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <!-- Dégradés -->
+    <linearGradient id="packGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7b00" />
+      <stop offset="100%" stop-color="#cc0000" />
+    </linearGradient>
+    <linearGradient id="cardGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0e0e0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Effet d'explosion en arrière-plan -->
+  <path d="M60 10 L65 30 L85 25 L75 40 L95 50 L75 60 L85 75 L65 70 L60 90 L55 70 L35 75 L45 60 L25 50 L45 40 L35 25 L55 30 Z" fill="#ffd700" opacity="0.5"/>
+
+  <!-- Carte 1 (Gauche) -->
+  <g transform="translate(60,60) rotate(-15) translate(-60,-60)">
+    <rect x="40" y="25" width="40" height="55" rx="3" fill="url(#cardGrad2)" stroke="#333" stroke-width="1.5"/>
+    <rect x="44" y="29" width="32" height="47" rx="1" fill="#fff" stroke="#ccc" stroke-width="0.5"/>
+    <circle cx="60" cy="45" r="8" fill="#4a90e2"/>
+  </g>
+  
+  <!-- Carte 2 (Droite) -->
+  <g transform="translate(60,60) rotate(15) translate(-60,-60)">
+    <rect x="40" y="25" width="40" height="55" rx="3" fill="url(#cardGrad2)" stroke="#333" stroke-width="1.5"/>
+    <rect x="44" y="29" width="32" height="47" rx="1" fill="#fff" stroke="#ccc" stroke-width="0.5"/>
+    <circle cx="60" cy="45" r="8" fill="#e24a4a"/>
+  </g>
+
+  <!-- Sachet déchiré -->
+  <path d="M 30,100 L 30,60 L 40,55 L 50,62 L 60,54 L 70,62 L 80,55 L 90,60 L 90,100 Z" fill="url(#packGrad2)" stroke="#333" stroke-width="1.5"/>
+  <path d="M 30,65 L 90,65" stroke="#fff" stroke-width="2" stroke-dasharray="4" opacity="0.5"/>
+
+  <!-- Badge 2 -->
+  <circle cx="85" cy="85" r="14" fill="#333" stroke="#fff" stroke-width="2"/>
+  <text x="85" y="90.5" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#fff" text-anchor="middle">2</text>
+</svg>

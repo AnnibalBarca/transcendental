@@ -1,0 +1,25 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - /var/lib/docker/containers/*/*.log
+    ignore_older: 1h
+
+processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+  - drop_event:
+      when:
+        or:
+          - contains:
+              docker.container.name: "logstash"
+          - contains:
+              docker.container.name: "elasticsearch"
+          - contains:
+              docker.container.name: "kibana"
+          - contains:
+              docker.container.name: "filebeat"
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+logging.level: info

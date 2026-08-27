@@ -1,0 +1,12 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="#230A30" stroke="#D364FF" stroke-width="4" stroke-linejoin="round"/>
+  <polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="none" stroke="#D364FF" stroke-width="2" stroke-linejoin="round" opacity="0.6"/>
+  <!-- Reine réduite -->
+  <g transform="translate(17.5, 17.5) scale(0.65)">
+    <path d="M 35,75 L 65,75 M 40,75 L 45,55 L 30,25 L 42,40 L 50,15 L 58,40 L 70,25 L 55,55 L 60,75" fill="none" stroke="#D364FF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Les cercles ont été légèrement agrandis avant réduction pour rester bien visibles -->
+    <circle cx="30" cy="22" r="3.5" fill="#D364FF" />
+    <circle cx="50" cy="12" r="3.5" fill="#D364FF" />
+    <circle cx="70" cy="22" r="3.5" fill="#D364FF" />
+  </g>
+</svg>

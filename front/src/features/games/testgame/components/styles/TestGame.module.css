@@ -1,0 +1,25 @@
+.game
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	justify-content: space-between;
+	height: 100%;
+	color: #fff;
+}
+
+.gameCenter
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.gameCenter > .gameInfo
+{
+	max-width: 80%;
+	text-align: center;
+	text-wrap: pretty;
+}

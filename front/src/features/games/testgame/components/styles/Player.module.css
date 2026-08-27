@@ -1,0 +1,40 @@
+.player
+{
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 90%;
+	color: white;
+
+	padding-bottom: 15px;
+}
+
+.cardContainer
+{
+	width: 90%;
+
+	overflow-x: auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: safe center;
+	margin-top: 10px;
+	flex-wrap: nowrap;
+
+	padding-top: 15px;
+
+}
+
+.cardContainer > div {
+	flex-shrink: 0;
+	margin-right: -20px;
+}
+
+.cardContainer > div:last-child {
+	margin-right: 0;
+}
+
+.cardContainer > *
+{
+	flex-shrink: 0;
+}

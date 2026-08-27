@@ -1,0 +1,34 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          timeout: 60m
+          script: |
+            set -e
+
+            cd /root/ft_transcendence
+
+            echo "Pulling latest code..."
+            git pull origin main
+
+            echo "Updating submodules..."
+            git submodule update --init --recursive
+
+            echo "Rebuilding Docker..."
+            docker compose up -d --build
+
+            echo "Deployment finished"

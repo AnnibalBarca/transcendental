@@ -1,0 +1,143 @@
+.chessBoard
+{
+	width: 90%;
+	aspect-ratio: 1/1;
+
+	max-width: 400px;
+	display: grid;
+	grid-template-columns: repeat(8, 1fr);
+
+	border-radius: 1000px;
+}
+
+@media (max-width: 768px) {
+	.chessBoard {
+		width: 92%;
+		max-width: 400px;
+	}
+}
+
+.square
+{
+	width: 100%;
+	aspect-ratio: 1/1;
+
+	position: relative;
+	line-height: 1;
+	font-weight: bold;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	font-size: 0.8rem;
+}
+
+.coordX
+{
+	position: absolute;
+	right: 7%;
+	bottom: 5%;
+}
+
+.coordY {
+	position: absolute;
+	left: 7%;
+	top: 5%;
+}
+
+.black
+{
+	background-color: #b58863;
+	color:#f0d9b5;
+}
+
+.white
+{
+	background-color: #f0d9b5;
+	color: #b58863;
+}
+
+.piece
+{
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
+
+	width: 95%;
+	aspect-ratio: 1 / 1;
+	cursor: pointer;
+
+	z-index: 15;
+
+	touch-action: none;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.over
+{
+	background-color:  rgb(0, 119, 255);
+}
+
+.highlight::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	pointer-events: none;
+}
+
+.square.highlight.emptySquare::after {
+	width: 24%;
+	height: 24%;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.square.highlight.hasPiece::after {
+	width: 90%;
+	height: 90%;
+
+	border: 6px solid rgba(0, 0, 0, 0.3);
+
+	background-color: transparent;
+}
+
+.lastMove.black
+{
+	background-color: rgb(55, 168, 196);
+}
+
+.lastMove.white
+{
+	background-color: rgb(96, 219, 250);
+}
+
+.targetMode {
+	cursor: crosshair;
+}
+
+.selected {
+	outline: 3px solid yellow;
+}
+
+.hasFog
+{
+	background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.battlefieldModifier.black {
+	background-color: rgb(12, 76, 12);
+}
+
+.battlefieldModifier.white {
+	background-color: green;
+}

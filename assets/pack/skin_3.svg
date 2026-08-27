@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <!-- Dégradé du sachet cosmétique -->
+    <linearGradient id="packGradCosm3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff007f" />
+      <stop offset="100%" stop-color="#7a00ff" />
+    </linearGradient>
+    
+    <!-- Dégradé du vêtement (Skin) -->
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="100%" stop-color="#4facfe" />
+    </linearGradient>
+  </defs>
+
+  <!-- Effet d'explosion (teinte rosée et dorée) -->
+  <path d="M60 10 L65 30 L85 25 L75 40 L95 50 L75 60 L85 75 L65 70 L60 90 L55 70 L35 75 L45 60 L25 50 L45 40 L35 25 L55 30 Z" fill="#ffb6c1" opacity="0.6"/>
+  <path d="M60 20 L63 35 L75 32 L68 42 L80 50 L68 58 L75 68 L63 65 L60 80 L57 65 L45 68 L52 58 L40 50 L52 42 L45 32 L57 35 Z" fill="#ffd700" opacity="0.4"/>
+
+  <!-- Déploiement des 3 objets cosmétiques -->
+  
+  <!-- Cosmétique 1 (Gauche) : Couronne -->
+  <g transform="translate(40, 50) rotate(-15)">
+    <path d="M-12,10 L-14,-6 L-5,1 L0,-10 L5,1 L14,-6 L12,10 Z" fill="#f1c40f" stroke="#333" stroke-width="1.5"/>
+    <circle cx="0" cy="5" r="2" fill="#fff" opacity="0.8"/>
+    <circle cx="-8" cy="7" r="1.5" fill="#e74c3c"/>
+    <circle cx="8" cy="7" r="1.5" fill="#3498db"/>
+  </g>
+
+  <!-- Cosmétique 2 (Centre) : Vêtement / Armure -->
+  <g transform="translate(60, 36)">
+    <path d="M-12,-8 L-22,0 L-14,9 L-9,4 L-9,22 L9,22 L9,4 L14,9 L22,0 L12,-8 L4,-13 L0,-9 L-4,-13 Z" fill="url(#skinGrad)" stroke="#333" stroke-width="1.5"/>
+    <!-- Détail du vêtement -->
+    <path d="M-4,-13 L0,-5 L4,-13" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="0" cy="12" r="3" fill="#fff" opacity="0.4"/>
+  </g>
+
+  <!-- Cosmétique 3 (Droite) : Cristal / Gemme -->
+  <g transform="translate(80, 50) rotate(15)">
+    <polygon points="0,-12 9,0 4,14 -4,14 -9,0" fill="#e74c3c" stroke="#333" stroke-width="1.5"/>
+    <!-- Reflet du cristal -->
+    <polygon points="-3,-6 2,-7 4,2 0,8" fill="#fff" opacity="0.4"/>
+  </g>
+
+  <!-- Sachet déchiré -->
+  <path d="M 28,100 L 28,60 L 38,55 L 48,62 L 60,54 L 72,62 L 82,55 L 92,60 L 92,100 Z" fill="url(#packGradCosm3)" stroke="#333" stroke-width="1.5"/>
+  <path d="M 28,65 L 92,65" stroke="#fff" stroke-width="2" stroke-dasharray="4" opacity="0.4"/>
+
+  <!-- Badge 3 -->
+  <circle cx="85" cy="85" r="14" fill="#333" stroke="#fff" stroke-width="2"/>
+  <text x="85" y="90.5" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#fff" text-anchor="middle">3</text>
+</svg>

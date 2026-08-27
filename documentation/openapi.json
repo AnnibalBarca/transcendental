@@ -1,0 +1,8100 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "ft_transcendence API",
+		"version": "2.0.0"
+	},
+	"paths": {
+		"/health": {
+			"get": {
+				"summary": "Gateway health check",
+				"tags": [
+					"Gateway"
+				],
+				"responses": {
+					"200": {
+						"description": "Gateway is online",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"service": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"service"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/health": {
+			"get": {
+				"summary": "Auth API health check",
+				"tags": [
+					"Auth"
+				],
+				"responses": {
+					"200": {
+						"description": "Auth API is online",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"service": {
+											"type": "string"
+										},
+										"dependencies": {
+											"$ref": "#/components/schemas/HealthDependencies"
+										}
+									},
+									"required": [
+										"status",
+										"service"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/register": {
+			"post": {
+				"summary": "Register a new user",
+				"tags": [
+					"Auth"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"format": "email"
+									},
+									"password": {
+										"type": "string",
+										"format": "password"
+									}
+								},
+								"required": [
+									"email",
+									"password"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "User registered successfully. Sets access_token and refresh_token cookies.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request (missing/invalid fields)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Banned account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/login/email": {
+			"post": {
+				"summary": "Login with email and password",
+				"tags": [
+					"Auth"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string",
+										"format": "password"
+									}
+								},
+								"required": [
+									"email",
+									"password"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Login successful. Sets access_token and refresh_token cookies.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid credentials",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Banned account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/google/code": {
+			"post": {
+				"summary": "Login or register with a Google authorization code",
+				"tags": [
+					"Auth"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"description": "Authorization code from Google OAuth"
+									}
+								},
+								"required": [
+									"code"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Google login successful. Sets access_token and refresh_token cookies.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"user": {
+											"$ref": "#/components/schemas/AuthUserData"
+										},
+										"account_validated": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"message",
+										"user",
+										"account_validated"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid Google code or user info",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Banned account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Email already registered with a different provider",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "Google OAuth not configured on the server",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/42/login": {
+			"get": {
+				"summary": "Initiate 42 OAuth login flow",
+				"tags": [
+					"Auth"
+				],
+				"responses": {
+					"302": {
+						"description": "Redirects to 42 intranet OAuth authorization page. Sets ft_oauth_state cookie."
+					},
+					"503": {
+						"description": "42 OAuth not configured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/42/callback": {
+			"get": {
+				"summary": "42 OAuth callback endpoint",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "code",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						},
+						"description": "Authorization code from 42"
+					},
+					{
+						"name": "state",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "error",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "error_description",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"302": {
+						"description": "Redirects to frontend. Sets access_token and refresh_token cookies on success, or ?error= query param on failure. Clears ft_oauth_state cookie."
+					}
+				}
+			}
+		},
+		"/api/auth/finish_account": {
+			"post": {
+				"summary": "Complete account setup by choosing a username (required after Google/42 registration)",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"username": {
+										"type": "string",
+										"description": "Desired username (3-255 characters)"
+									}
+								},
+								"required": [
+									"username"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Account setup completed. Sets new access_token and refresh_token cookies.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"user": {
+											"$ref": "#/components/schemas/UserDataResponse"
+										}
+									},
+									"required": [
+										"message",
+										"user"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid username",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Email not validated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Account already validated or username already taken",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/send_validation_email_code": {
+			"post": {
+				"summary": "Send an email validation code to the authenticated user",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Validation code sent",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"user": {
+											"$ref": "#/components/schemas/UserDataResponse"
+										}
+									},
+									"required": [
+										"message",
+										"user"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Email already validated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limited: code was already sent recently (60s cooldown)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/validate_email": {
+			"post": {
+				"summary": "Validate email using the code sent to the user's email",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"description": "6-digit validation code"
+									}
+								},
+								"required": [
+									"code"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Email validated successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"user": {
+											"$ref": "#/components/schemas/UserDataResponse"
+										}
+									},
+									"required": [
+										"message",
+										"user"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid or missing validation code",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Email already validated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/forgot_password": {
+			"post": {
+				"summary": "Request a password reset email",
+				"tags": [
+					"Auth"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"format": "email"
+									}
+								},
+								"required": [
+									"email"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "If the email is registered, a reset link has been sent. Returns the same message regardless of whether the email exists (to prevent enumeration).",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid email address",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/reset_password": {
+			"post": {
+				"summary": "Reset password using a reset token (received via email)",
+				"tags": [
+					"Auth"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"token": {
+										"type": "string",
+										"description": "Password reset token received via email"
+									},
+									"new_password": {
+										"type": "string",
+										"format": "password",
+										"description": "New password (8-255 characters)"
+									}
+								},
+								"required": [
+									"token",
+									"new_password"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Password reset successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid or expired token, or weak password",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/refresh": {
+			"get": {
+				"summary": "Refresh access and refresh tokens using the refresh_token cookie",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "refresh_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Tokens refreshed. Sets new access_token and refresh_token cookies.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing, invalid, or expired refresh token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/logout": {
+			"get": {
+				"summary": "Logout the current user. Revokes tokens and clears auth cookies.",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "refresh_token",
+						"in": "cookie",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Logout successful. Auth cookies cleared.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/validate": {
+			"post": {
+				"summary": "Validate the current JWT access token",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"required": false,
+						"schema": {
+							"type": "string"
+						},
+						"description": "Bearer <token>"
+					},
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Token is valid",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"valid": {
+											"type": "boolean"
+										},
+										"sub": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"exp": {
+											"type": "integer",
+											"format": "int64"
+										},
+										"username": {
+											"type": "string"
+										},
+										"email": {
+											"type": "string",
+											"format": "email"
+										}
+									},
+									"required": [
+										"valid",
+										"sub",
+										"exp",
+										"username",
+										"email"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid or missing token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Token revoked or blacklisted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/change_password": {
+			"post": {
+				"summary": "Change the password of the authenticated user",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"old_password": {
+										"type": "string",
+										"format": "password"
+									},
+									"new_password": {
+										"type": "string",
+										"format": "password"
+									}
+								},
+								"required": [
+									"old_password",
+									"new_password"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Password changed. Sets new access_token and refresh_token cookies.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"user": {
+											"$ref": "#/components/schemas/AuthUserData"
+										}
+									},
+									"required": [
+										"message",
+										"user"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request (empty or identical passwords)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Wrong old password, or not an email-provider account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/delete_user": {
+			"delete": {
+				"summary": "Delete the authenticated user's account permanently",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Account deleted. Auth cookies cleared.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/change_provider/email/send_validation_code": {
+			"post": {
+				"summary": "Send a validation code to a new email address for switching the auth provider to email",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"format": "email"
+									}
+								},
+								"required": [
+									"email"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Validation code sent to the new email",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid email",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Email already in use by another account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limited (60s cooldown)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/change_provider/email/switch": {
+			"post": {
+				"summary": "Switch the auth provider to email using the validation code and set a password",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"format": "email"
+									},
+									"code": {
+										"type": "string",
+										"description": "Validation code received via email"
+									},
+									"password": {
+										"type": "string",
+										"format": "password",
+										"description": "New password for email auth"
+									}
+								},
+								"required": [
+									"email",
+									"code",
+									"password"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Provider switched to email successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid code, email, or password",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Already using email provider or conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/change_provider/google/switch": {
+			"post": {
+				"summary": "Switch the auth provider to Google using a Google authorization code",
+				"tags": [
+					"Auth"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"description": "Google OAuth authorization code"
+									}
+								},
+								"required": [
+									"code"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Provider switched to Google successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid code",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Email in use by another account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "Google OAuth not configured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/stats": {
+			"get": {
+				"summary": "Get global application stats (matches played, users online, active rooms)",
+				"tags": [
+					"Auth"
+				],
+				"responses": {
+					"200": {
+						"description": "Global stats",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"matches_played": {
+											"type": "integer"
+										},
+										"users_online": {
+											"type": "integer"
+										},
+										"active_rooms": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"matches_played",
+										"users_online",
+										"active_rooms"
+									]
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Failed to load stats",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/notifications/health": {
+			"get": {
+				"summary": "Notification API health check",
+				"tags": [
+					"Notifications"
+				],
+				"responses": {
+					"200": {
+						"description": "Notification API is online"
+					}
+				}
+			}
+		},
+		"/api/notifications/sse/rooms": {
+			"get": {
+				"summary": "SSE stream for public room updates",
+				"tags": [
+					"Notifications"
+				],
+				"responses": {
+					"200": {
+						"description": "SSE connection established. Streams room update events.",
+						"content": {
+							"text/event-stream": {
+								"schema": {
+									"type": "string",
+									"description": "Server-Sent Events stream. Events have the format: data: {\"type\":\"rooms_updated\"}\n\n"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/notifications/sse/{user_id}": {
+			"get": {
+				"summary": "SSE stream for user-specific notifications",
+				"tags": [
+					"Notifications"
+				],
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "SSE connection established. Streams user-specific events (state changes, friend requests, messages)."
+					}
+				}
+			}
+		},
+		"/api/user/health": {
+			"get": {
+				"summary": "User API health check",
+				"tags": [
+					"User"
+				],
+				"responses": {
+					"200": {
+						"description": "User API is online",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"service": {
+											"type": "string"
+										},
+										"dependencies": {
+											"$ref": "#/components/schemas/UserHealthDependencies"
+										}
+									},
+									"required": [
+										"status",
+										"service"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/me": {
+			"get": {
+				"summary": "Get the currently authenticated user's full profile",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User profile retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"user": {
+											"$ref": "#/components/schemas/UserFullProfile"
+										}
+									},
+									"required": [
+										"status",
+										"user"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Account banned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/users/{user_id}": {
+			"get": {
+				"summary": "Get a user's public profile by ID or username. More fields returned if the user is the owner (authenticated).",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"description": "User UUID or username"
+						}
+					},
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": false,
+						"schema": {
+							"type": "string"
+						},
+						"description": "Optional. When provided and matching the user_id, returns owner-only fields like email."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"user": {
+											"$ref": "#/components/schemas/UserFullProfile"
+										}
+									},
+									"required": [
+										"status",
+										"user"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid user_id format",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Profile is private and requester is not the owner or a friend",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/state": {
+			"get": {
+				"summary": "Get the current session state and room ID",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User state retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"state": {
+											"type": "object",
+											"properties": {
+												"state": {
+													"type": "string",
+													"enum": [
+														"none",
+														"matchmaking",
+														"waiting",
+														"playing",
+														"tournament_lobby"
+													]
+												},
+												"room_id": {
+													"type": "string",
+													"format": "uuid",
+													"nullable": true
+												}
+											},
+											"required": [
+												"state",
+												"room_id"
+											]
+										}
+									},
+									"required": [
+										"status",
+										"state"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing or invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "No active session found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/change-username": {
+			"patch": {
+				"summary": "Change the authenticated user's username",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"description": "New username (3-20 characters)"
+									}
+								},
+								"required": [
+									"name"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Username updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid username",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Cannot change username while in a game",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Username already in use",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/profile-picture": {
+			"get": {
+				"summary": "Get the authenticated user's current profile picture ID",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Profile picture ID retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"picture_id": {
+											"type": "string",
+											"nullable": true
+										}
+									},
+									"required": [
+										"status",
+										"picture_id"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Set the authenticated user's profile picture",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"picture_id": {
+										"type": "string",
+										"description": "Base62-encoded composite ID identifying the item and slot"
+									}
+								},
+								"required": [
+									"picture_id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Profile picture updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid or unowned picture_id",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/inventory": {
+			"get": {
+				"summary": "Get the authenticated user's inventory items",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Inventory retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"items": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/InventoryItem"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"items"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Purchase an item with wallet coins",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"item_id": {
+										"type": "string"
+									},
+									"item_type": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"item_id",
+									"item_type"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Purchase successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"item_id": {
+											"type": "string"
+										},
+										"item_type": {
+											"type": "string"
+										},
+										"wallet": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"item_id",
+										"item_type",
+										"wallet"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Item not available",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Already owned or insufficient funds",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Refund/remove an item from inventory",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"item_id": {
+										"type": "string"
+									},
+									"item_type": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"item_id",
+									"item_type"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Item refunded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"item_id": {
+											"type": "string"
+										},
+										"item_type": {
+											"type": "string"
+										},
+										"wallet": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"item_id",
+										"item_type",
+										"wallet"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User does not own the item",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/shop": {
+			"get": {
+				"summary": "Get the shop catalog (items, collections, slots, packs). Optional auth enriches with wallet and owned items.",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Shop catalog",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/shop/items": {
+			"post": {
+				"summary": "Upload a new shop item (public, admin/internal oriented)",
+				"tags": [
+					"User"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"item_id": {
+										"type": "string",
+										"description": "16-bit id (1-4095)"
+									},
+									"item_type": {
+										"type": "string",
+										"description": "Slot name"
+									},
+									"title": {
+										"type": "string"
+									},
+									"price": {
+										"type": "integer"
+									},
+									"image_base64": {
+										"type": "string"
+									},
+									"content_type": {
+										"type": "string",
+										"default": "image/png"
+									},
+									"collection_id": {
+										"type": "string",
+										"format": "uuid",
+										"nullable": true
+									}
+								},
+								"required": [
+									"item_id",
+									"item_type",
+									"title",
+									"price",
+									"image_base64"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Item uploaded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"item_id": {
+											"type": "string"
+										},
+										"item_type": {
+											"type": "string"
+										},
+										"asset_key": {
+											"type": "string"
+										},
+										"image_url": {
+											"type": "string",
+											"format": "uri"
+										},
+										"collection_id": {
+											"type": "string",
+											"format": "uuid",
+											"nullable": true
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"item_id",
+										"item_type",
+										"asset_key",
+										"image_url"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body or slot",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"413": {
+						"description": "Image too large (>2MB)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"502": {
+						"description": "MinIO failure",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "Storage not configured",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/collections": {
+			"get": {
+				"summary": "List all available collections (public, no auth required)",
+				"tags": [
+					"User"
+				],
+				"responses": {
+					"200": {
+						"description": "Collections list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"collections": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Collection"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"collections"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/collections/purchase": {
+			"post": {
+				"summary": "Purchase a collection, granting all its items",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"collection_id": {
+										"type": "string",
+										"format": "uuid"
+									}
+								},
+								"required": [
+									"collection_id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Collection purchased",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"collection_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"granted": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"item_id": {
+														"type": "string"
+													},
+													"item_type": {
+														"type": "string"
+													}
+												}
+											}
+										},
+										"wallet": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"collection_id",
+										"granted",
+										"wallet"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body/UUID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Collection not available",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Empty collection / already owned / insufficient funds",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/packs/open": {
+			"post": {
+				"summary": "Open a pack and receive random rewards",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"pack_type": {
+										"type": "string",
+										"enum": [
+											"skin_1",
+											"skin_3",
+											"card_2",
+											"card_5"
+										]
+									}
+								},
+								"required": [
+									"pack_type"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Pack opened",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"pack_type": {
+											"type": "string"
+										},
+										"wallet": {
+											"type": "integer"
+										},
+										"rewards": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/PackReward"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"pack_type",
+										"wallet",
+										"rewards"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body or unknown pack_type",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Insufficient funds",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/cards": {
+			"get": {
+				"summary": "Get the authenticated user's owned cards",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Cards retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"cards": {
+											"type": "array"
+										}
+									},
+									"required": [
+										"status",
+										"cards"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/deck": {
+			"get": {
+				"summary": "Get the authenticated user's deck",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Deck retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"deck": {
+											"type": "array"
+										}
+									},
+									"required": [
+										"status",
+										"deck"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/deck/rarity": {
+			"put": {
+				"summary": "Set the rarity of a card in the deck",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"card_id": {
+										"type": "string"
+									},
+									"rarity": {
+										"type": "integer"
+									}
+								},
+								"required": [
+									"card_id",
+									"rarity"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Deck updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "User does not own this card rarity",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/settings": {
+			"get": {
+				"summary": "Get the authenticated user's account settings",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Settings retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"settings": {
+											"$ref": "#/components/schemas/Settings"
+										}
+									},
+									"required": [
+										"status",
+										"settings"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"summary": "Update the authenticated user's account settings",
+				"tags": [
+					"User"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"bio": {
+										"type": "string"
+									},
+									"github": {
+										"type": "string"
+									},
+									"discord": {
+										"type": "string"
+									},
+									"twitter": {
+										"type": "string"
+									},
+									"is_private": {
+										"type": "boolean"
+									},
+									"theme": {
+										"type": "string",
+										"enum": [
+											"dark",
+											"light"
+										]
+									},
+									"lang": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Settings updated successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body or theme",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/users": {
+			"post": {
+				"summary": "List users (admin, requires users.view permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"limit": {
+										"type": "integer",
+										"default": 50
+									},
+									"offset": {
+										"type": "integer",
+										"default": 0
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"users": {
+											"type": "array"
+										},
+										"total": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"users",
+										"total"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden: missing permission",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/users/{user_id}": {
+			"parameters": [
+				{
+					"name": "access_token",
+					"in": "cookie",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				},
+				{
+					"name": "user_id",
+					"in": "path",
+					"required": true,
+					"schema": {
+						"type": "string",
+						"format": "uuid"
+					}
+				}
+			],
+			"patch": {
+				"summary": "Update a user (admin, requires users.edit permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"username": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string",
+										"format": "email"
+									},
+									"account_validated": {
+										"type": "boolean"
+									},
+									"email_validated": {
+										"type": "boolean"
+									},
+									"is_banned": {
+										"type": "boolean"
+									},
+									"wallet": {
+										"type": "integer"
+									},
+									"ranked_elo": {
+										"type": "integer"
+									},
+									"xp": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"user_id": {
+											"type": "string",
+											"format": "uuid"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"user_id"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad JSON/id",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete a user (admin, requires users.delete permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"user_id": {
+											"type": "string",
+											"format": "uuid"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"user_id"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad id",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/roles": {
+			"get": {
+				"summary": "List roles (admin, requires roles.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Roles list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"roles": {
+											"type": "array"
+										}
+									},
+									"required": [
+										"status",
+										"roles"
+									]
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Create a role (admin, requires roles.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"description": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"name"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Role created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"role": {
+											"type": "object"
+										}
+									},
+									"required": [
+										"status",
+										"role"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/roles/{role_id}": {
+			"parameters": [
+				{
+					"name": "access_token",
+					"in": "cookie",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				},
+				{
+					"name": "role_id",
+					"in": "path",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					}
+				}
+			],
+			"patch": {
+				"summary": "Update a role (admin, requires roles.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"description": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Role updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"role_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"role_id"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Role not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete a role (admin, requires roles.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Role deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"role_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"role_id"
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Role not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/roles/{role_id}/permissions": {
+			"post": {
+				"summary": "Grant a permission to a role (admin, requires roles.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									}
+								},
+								"required": [
+									"id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Permission granted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"role_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"role_id"
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Permission not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/roles/{role_id}/permissions/{permission_id}": {
+			"delete": {
+				"summary": "Remove a permission from a role (admin, requires roles.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "permission_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Permission removed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"role_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"role_id"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/permissions": {
+			"get": {
+				"summary": "List permissions (admin, requires permissions.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Permissions list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"permissions": {
+											"type": "array"
+										}
+									},
+									"required": [
+										"status",
+										"permissions"
+									]
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Create a permission (admin, requires permissions.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"description": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"name"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Permission created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"permission": {
+											"type": "object"
+										}
+									},
+									"required": [
+										"status",
+										"permission"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/permissions/{permission_id}": {
+			"parameters": [
+				{
+					"name": "access_token",
+					"in": "cookie",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				},
+				{
+					"name": "permission_id",
+					"in": "path",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					}
+				}
+			],
+			"patch": {
+				"summary": "Update a permission (admin, requires permissions.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "permission_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"description": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Permission updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"permission_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"permission_id"
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Permission not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete a permission (admin, requires permissions.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "permission_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Permission deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"permission_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"permission_id"
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Permission not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/permissions/{permission_id}/routes": {
+			"post": {
+				"summary": "Link a route to a permission (admin, requires permissions.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "permission_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									}
+								},
+								"required": [
+									"id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Route linked",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"permission_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"permission_id"
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Route not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/permissions/{permission_id}/routes/{route_id}": {
+			"delete": {
+				"summary": "Unlink a route from a permission (admin, requires permissions.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "permission_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "route_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Route unlinked",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"permission_id": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"permission_id"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/routes": {
+			"get": {
+				"summary": "List routes (admin, requires routes.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Routes list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"routes": {
+											"type": "array"
+										}
+									},
+									"required": [
+										"status",
+										"routes"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/routes/{route_id}/rate-limit": {
+			"put": {
+				"summary": "Set a route's rate limit (admin, requires rate-limits.manage permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "route_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"requests_per_minute": {
+										"type": "integer"
+									}
+								},
+								"required": [
+									"requests_per_minute"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Rate limit updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"route_id": {
+											"type": "integer"
+										},
+										"requests_per_minute": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"route_id",
+										"requests_per_minute"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid requests_per_minute",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Route not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/users/{user_id}/roles": {
+			"post": {
+				"summary": "Assign a role to a user (admin, requires users.edit permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									}
+								},
+								"required": [
+									"id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Role assigned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"user_id": {
+											"type": "string",
+											"format": "uuid"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"user_id"
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Role not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/users/{user_id}/roles/{role_id}": {
+			"delete": {
+				"summary": "Remove a role from a user (admin, requires users.edit permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Role removed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"user_id": {
+											"type": "string",
+											"format": "uuid"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"user_id"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/users/{user_id}/cards": {
+			"get": {
+				"summary": "List a user's cards (admin, requires users.edit permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Cards list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"cards": {
+											"type": "array"
+										}
+									},
+									"required": [
+										"status",
+										"cards"
+									]
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Grant a card to a user (admin, requires users.edit permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"card_id": {
+										"type": "string"
+									},
+									"rarity": {
+										"type": "integer",
+										"enum": [
+											0,
+											1,
+											2
+										],
+										"default": 0
+									}
+								},
+								"required": [
+									"card_id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Card granted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"user_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"card_id": {
+											"type": "string"
+										},
+										"rarity": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"user_id",
+										"card_id",
+										"rarity"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid card_id/rarity",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Card not available",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/admin/users/{user_id}/cards/{card_id}/{rarity}": {
+			"delete": {
+				"summary": "Remove a card rarity from a user (admin, requires users.edit permission)",
+				"tags": [
+					"Admin"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "card_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "rarity",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Card rarity removed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"user_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"card_id": {
+											"type": "string"
+										},
+										"rarity": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"message",
+										"user_id",
+										"card_id",
+										"rarity"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid rarity/card_id",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/health": {
+			"get": {
+				"summary": "Room API health check",
+				"tags": [
+					"Room"
+				],
+				"responses": {
+					"200": {
+						"description": "Room API is online",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"service": {
+											"type": "string"
+										},
+										"dependencies": {
+											"$ref": "#/components/schemas/HealthDependencies"
+										}
+									},
+									"required": [
+										"status",
+										"service"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/create_room": {
+			"post": {
+				"summary": "Create a new game room",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"title": {
+										"type": "string",
+										"nullable": true,
+										"description": "Optional room title"
+									},
+									"private": {
+										"type": "boolean"
+									},
+									"max_players": {
+										"type": "integer",
+										"enum": [
+											2,
+											4,
+											8,
+											16
+										],
+										"description": "Maximum number of players (2 for a casual game, 4/8/16 for a tournament)"
+									},
+									"bot_difficulty": {
+										"type": "string",
+										"nullable": true,
+										"enum": [
+											"easy",
+											"medium",
+											"hard"
+										]
+									},
+									"time_control": {
+										"type": "integer",
+										"nullable": true,
+										"enum": [
+											5,
+											10,
+											15
+										],
+										"description": "Minutes per player (only for 2-player games)"
+									}
+								},
+								"required": [
+									"private",
+									"max_players"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Room created successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"room_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"join_code": {
+											"type": "string",
+											"nullable": true
+										},
+										"private": {
+											"type": "boolean"
+										},
+										"player_count": {
+											"type": "integer"
+										},
+										"max_players": {
+											"type": "integer"
+										},
+										"time_control": {
+											"type": "integer",
+											"nullable": true
+										},
+										"game_type": {
+											"type": "string",
+											"enum": [
+												"game",
+												"tournament"
+											]
+										}
+									},
+									"required": [
+										"status",
+										"room_id",
+										"private",
+										"player_count",
+										"max_players"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Already in a room",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/play_ranked": {
+			"post": {
+				"summary": "Join the ranked matchmaking queue",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"time_control": {
+										"type": "string",
+										"enum": [
+											"5",
+											"10",
+											"15"
+										],
+										"default": "10"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Joined the matchmaking queue",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"room_status": {
+											"type": "string"
+										},
+										"queue_size": {
+											"type": "integer"
+										},
+										"elo": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"room_status",
+										"queue_size",
+										"elo"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Already playing or in matchmaking",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/cancel_ranked": {
+			"post": {
+				"summary": "Leave the ranked matchmaking queue",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Left the matchmaking queue",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Not currently in matchmaking",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/play_ranked_tournament": {
+			"post": {
+				"summary": "Join the ranked tournament matchmaking queue",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"player_size": {
+										"type": "integer",
+										"enum": [
+											4,
+											8,
+											16
+										],
+										"default": 4
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Joined tournament matchmaking",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"tournament": {
+											"type": "object"
+										},
+										"room_status": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"tournament",
+										"room_status"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid player_size or queue error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Already playing",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/cancel_ranked_tournament": {
+			"post": {
+				"summary": "Leave the ranked tournament matchmaking queue",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Left tournament matchmaking",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Not in tournament matchmaking",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/abandon_tournament": {
+			"post": {
+				"summary": "Abandon an in-progress tournament",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Tournament abandoned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/queue_size": {
+			"get": {
+				"summary": "Get the current size of the ranked matchmaking queue (public)",
+				"tags": [
+					"Room"
+				],
+				"responses": {
+					"200": {
+						"description": "Queue size",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"queue_size": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"queue_size"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/status": {
+			"get": {
+				"summary": "Get the current room/session status of the authenticated user",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Room status retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"room_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"state": {
+											"type": "string",
+											"enum": [
+												"none",
+												"matchmaking",
+												"waiting",
+												"playing",
+												"tournament_lobby"
+											]
+										},
+										"chess_ws_url": {
+											"type": "string",
+											"nullable": true
+										}
+									},
+									"required": [
+										"status",
+										"room_id",
+										"state",
+										"chess_ws_url"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/list_public": {
+			"get": {
+				"summary": "List all public rooms",
+				"tags": [
+					"Room"
+				],
+				"responses": {
+					"200": {
+						"description": "Public rooms list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"rooms": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/PublicRoom"
+											}
+										},
+										"count": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"rooms",
+										"count"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/join_room": {
+			"post": {
+				"summary": "Join an existing public room or a private room by join code",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"room_id": {
+										"type": "string",
+										"format": "uuid",
+										"description": "Room ID (for public rooms)"
+									},
+									"join_code": {
+										"type": "string",
+										"description": "Join code (for private rooms)"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Joined room successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"room_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"player_count": {
+											"type": "integer"
+										},
+										"max_players": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"room_id",
+										"player_count",
+										"max_players"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Room not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Room is full or already in a room",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/leave_room": {
+			"post": {
+				"summary": "Leave the current room. If playing, abandons the game.",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Left room successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not in a room",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Cannot leave in current state",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/start_room": {
+			"post": {
+				"summary": "Start the room (host only)",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"room_id": {
+										"type": "string",
+										"format": "uuid"
+									}
+								},
+								"required": [
+									"room_id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Room started",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"room_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"room_status": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"room_id",
+										"room_status"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body or start failure",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/kick_room": {
+			"post": {
+				"summary": "Kick (and optionally ban) a player from a room",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"room_id": {
+										"type": "string",
+										"format": "uuid"
+									},
+									"user_id": {
+										"type": "string",
+										"format": "uuid"
+									},
+									"ban": {
+										"type": "boolean",
+										"default": false
+									}
+								},
+								"required": [
+									"room_id",
+									"user_id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Player kicked",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"room_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"player_count": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"room_id",
+										"player_count"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body or kick failure",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/room_info": {
+			"post": {
+				"summary": "Get a room's lobby state",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"room_id": {
+										"type": "string",
+										"format": "uuid"
+									}
+								},
+								"required": [
+									"room_id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Room info",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"room": {
+											"type": "object"
+										}
+									},
+									"required": [
+										"status",
+										"room"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body or missing room_id",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/tournament/list": {
+			"get": {
+				"summary": "List all tournaments",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Tournaments list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"tournaments": {
+											"type": "array"
+										}
+									},
+									"required": [
+										"status",
+										"tournaments"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/tournament/my": {
+			"get": {
+				"summary": "Get the current user's tournament",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Current tournament",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"tournament": {
+											"type": "object",
+											"nullable": true
+										}
+									},
+									"required": [
+										"status",
+										"tournament"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/room/tournament/status/{tournament_id}": {
+			"get": {
+				"summary": "Get a tournament's status by ID",
+				"tags": [
+					"Room"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "tournament_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Tournament status",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"tournament": {
+											"type": "object"
+										}
+									},
+									"required": [
+										"status",
+										"tournament"
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Tournament not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/chess/health": {
+			"get": {
+				"summary": "Chess API health check",
+				"tags": [
+					"Chess"
+				],
+				"responses": {
+					"200": {
+						"description": "Chess API is online",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"service": {
+											"type": "string"
+										},
+										"instance": {
+											"type": "string"
+										},
+										"dependencies": {
+											"$ref": "#/components/schemas/HealthDependencies"
+										}
+									},
+									"required": [
+										"status",
+										"service"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/chess/game/create": {
+			"post": {
+				"summary": "Create a new chess game",
+				"tags": [
+					"Chess"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"time_control": {
+										"type": "string",
+										"enum": [
+											"5",
+											"10",
+											"15"
+										],
+										"default": "10"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Game created successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"game_id": {
+											"type": "string",
+											"format": "uuid"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"game_id",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/chess/game/abandon": {
+			"post": {
+				"summary": "Abandon a chess game (opponent wins by resignation). Internal route.",
+				"tags": [
+					"Chess"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"game_id": {
+										"type": "string",
+										"format": "uuid"
+									},
+									"user_id": {
+										"type": "string",
+										"format": "uuid"
+									}
+								},
+								"required": [
+									"game_id",
+									"user_id"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Game abandoned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"winner": {
+											"type": "string",
+											"enum": [
+												"white",
+												"black"
+											]
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"status",
+										"winner",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Game not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenericErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/chess": {
+			"get": {
+				"summary": "WebSocket endpoint for a chess game (upgrades the connection)",
+				"tags": [
+					"Chess"
+				],
+				"parameters": [
+					{
+						"name": "game_id",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": "default"
+						}
+					},
+					{
+						"name": "access_token",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "spectate",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						},
+						"description": "Present to spectate"
+					},
+					{
+						"name": "picture_id",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"101": {
+						"description": "Switching Protocols: WebSocket connection established. Handles moves, chat, spectating and picture updates."
+					},
+					"404": {
+						"description": "Game not found on this instance"
+					}
+				}
+			}
+		},
+		"/api/social/health": {
+			"get": {
+				"summary": "Social API health check",
+				"tags": [
+					"Social"
+				],
+				"responses": {
+					"200": {
+						"description": "Social API is online",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string"
+										},
+										"service": {
+											"type": "string"
+										},
+										"dependencies": {
+											"$ref": "#/components/schemas/HealthDependencies"
+										}
+									},
+									"required": [
+										"status",
+										"service"
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friend-requests": {
+			"post": {
+				"summary": "Send a friend request to a user",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"friend_username": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"friend_username"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Friend request sent",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request (e.g. cannot send to self)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Friend request already sent or already friends",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"summary": "Get pending friend requests received by the authenticated user",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of pending friend requests",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"requests": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/FriendRequestItem"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"requests"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friend-requests/sent": {
+			"get": {
+				"summary": "Get friend requests sent by the authenticated user",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of sent friend requests",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"requests": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/FriendRequestItem"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"requests"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friend-requests/{friend_id}/accept": {
+			"patch": {
+				"summary": "Accept an incoming friend request",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Friend request accepted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid friend ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friend-requests/{friend_id}/refuse": {
+			"patch": {
+				"summary": "Refuse an incoming friend request",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Friend request refused",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid friend ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friend-requests/{friend_id}": {
+			"delete": {
+				"summary": "Cancel a sent friend request",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Friend request cancelled",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid friend ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friends": {
+			"get": {
+				"summary": "Get the authenticated user's friends list",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Friends list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"friends": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/FriendItem"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"friends"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friends/blocked": {
+			"get": {
+				"summary": "Get the authenticated user's blocked users list",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Blocked users list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"blocked": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/FriendItem"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"blocked"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friends/{friend_id}": {
+			"delete": {
+				"summary": "Remove a friend from the friends list",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Friend removed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid friend ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friends/{friend_id}/block": {
+			"post": {
+				"summary": "Block a user",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User blocked",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid user ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Unblock a user",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User unblocked",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialStatusResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid user ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friends/{friend_id}/messages": {
+			"post": {
+				"summary": "Send a message to a friend",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"content": {
+										"type": "string",
+										"description": "Message content (non-empty)"
+									}
+								},
+								"required": [
+									"content"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Message sent",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"$ref": "#/components/schemas/ChatMessage"
+										}
+									},
+									"required": [
+										"status",
+										"message"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"summary": "Get messages between the authenticated user and a friend (paginated)",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "limit",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 50
+						}
+					},
+					{
+						"name": "offset",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 0
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Messages retrieved",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"messages": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/ChatMessage"
+											}
+										}
+									},
+									"required": [
+										"status",
+										"messages"
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/social/friends/{friend_id}/messages/read": {
+			"post": {
+				"summary": "Mark all messages from a friend as read",
+				"tags": [
+					"Social"
+				],
+				"parameters": [
+					{
+						"name": "access_token",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "friend_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Messages marked as read",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "integer"
+										},
+										"marked_as_read": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"status",
+										"marked_as_read"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid friend ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SocialErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"HealthDependencies": {
+				"type": "object",
+				"properties": {
+					"postgres": {
+						"type": "object",
+						"properties": {
+							"status": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"status"
+						]
+					},
+					"redis": {
+						"type": "object",
+						"properties": {
+							"status": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"status"
+						]
+					}
+				},
+				"required": [
+					"postgres",
+					"redis"
+				]
+			},
+			"UserHealthDependencies": {
+				"type": "object",
+				"properties": {
+					"postgres": {
+						"type": "object",
+						"properties": {
+							"status": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"status"
+						]
+					},
+					"redis": {
+						"type": "object",
+						"properties": {
+							"status": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"status"
+						]
+					},
+					"storage": {
+						"type": "object",
+						"properties": {
+							"status": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"status"
+						]
+					}
+				},
+				"required": [
+					"postgres",
+					"redis",
+					"storage"
+				]
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"properties": {
+					"error": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"error"
+				]
+			},
+			"AuthUserData": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"username": {
+						"type": "string",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					},
+					"account_validated": {
+						"type": "boolean"
+					},
+					"email_validated": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"id",
+					"email",
+					"account_validated"
+				]
+			},
+			"AuthResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/AuthUserData"
+					},
+					"access_token": {
+						"type": "string"
+					},
+					"refresh_token": {
+						"type": "string"
+					},
+					"access_token_expires_in": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"refresh_token_expires_in": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"token_type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message",
+					"user",
+					"access_token",
+					"refresh_token",
+					"access_token_expires_in",
+					"refresh_token_expires_in",
+					"token_type"
+				]
+			},
+			"LoginResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"user": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "string",
+								"format": "uuid"
+							},
+							"username": {
+								"type": "string",
+								"nullable": true
+							},
+							"email": {
+								"type": "string",
+								"format": "email"
+							}
+						},
+						"required": [
+							"id",
+							"email"
+						]
+					},
+					"access_token_expires_in": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"refresh_token_expires_in": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"token_type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message",
+					"user",
+					"access_token_expires_in",
+					"refresh_token_expires_in",
+					"token_type"
+				]
+			},
+			"TokenResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"access_token": {
+						"type": "string"
+					},
+					"refresh_token": {
+						"type": "string"
+					},
+					"access_token_expires_in": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"refresh_token_expires_in": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"token_type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message",
+					"access_token",
+					"refresh_token",
+					"access_token_expires_in",
+					"refresh_token_expires_in",
+					"token_type"
+				]
+			},
+			"UserDataResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"username": {
+						"type": "string",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					},
+					"account_validated": {
+						"type": "boolean"
+					},
+					"email_validated": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"id",
+					"email",
+					"account_validated"
+				]
+			},
+			"UserFullProfile": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"username": {
+						"type": "string",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"format": "email",
+						"nullable": true
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"none",
+							"matchmaking",
+							"waiting",
+							"playing",
+							"tournament_lobby"
+						],
+						"nullable": true
+					},
+					"room_id": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
+					"chess_game_id": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
+					"chess_ws_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"account_validated": {
+						"type": "boolean"
+					},
+					"email_validated": {
+						"type": "boolean"
+					},
+					"access_token_expires_in": {
+						"type": "integer",
+						"nullable": true
+					},
+					"auth_provider": {
+						"type": "string",
+						"enum": [
+							"email",
+							"google",
+							"42"
+						]
+					},
+					"wallet": {
+						"type": "integer",
+						"description": "Coin balance"
+					},
+					"ranked_elo": {
+						"type": "integer"
+					},
+					"level": {
+						"type": "integer"
+					},
+					"xp": {
+						"type": "integer"
+					},
+					"xp_progress": {
+						"type": "number",
+						"format": "float"
+					},
+					"picture_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"has_panel_access": {
+						"type": "boolean"
+					},
+					"bio": {
+						"type": "string",
+						"nullable": true
+					},
+					"github": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord": {
+						"type": "string",
+						"nullable": true
+					},
+					"twitter": {
+						"type": "string",
+						"nullable": true
+					},
+					"is_private": {
+						"type": "boolean"
+					},
+					"theme": {
+						"type": "string"
+					},
+					"lang": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"account_validated",
+					"email_validated",
+					"auth_provider"
+				]
+			},
+			"UserErrorResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer"
+					},
+					"error": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"error"
+				]
+			},
+			"GenericErrorResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer"
+					},
+					"error": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"error"
+				]
+			},
+			"Collection": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "integer"
+					},
+					"end_date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"image_url": {
+						"type": "string",
+						"format": "uri"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"price",
+					"end_date",
+					"image_url"
+				]
+			},
+			"InventoryItem": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"user_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"item_id": {
+						"type": "string"
+					},
+					"item_type": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"asset_key": {
+						"type": "string",
+						"nullable": true
+					},
+					"image_url": {
+						"type": "string",
+						"format": "uri",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"user_id",
+					"item_id",
+					"item_type",
+					"created_at"
+				]
+			},
+			"ShopResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer"
+					},
+					"items": {
+						"type": "array"
+					},
+					"collections": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Collection"
+						}
+					},
+					"slots": {
+						"type": "array"
+					},
+					"packs": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"type": {
+									"type": "string"
+								},
+								"kind": {
+									"type": "string"
+								},
+								"label": {
+									"type": "string"
+								},
+								"count": {
+									"type": "integer"
+								},
+								"price": {
+									"type": "integer"
+								}
+							}
+						}
+					},
+					"wallet": {
+						"type": "integer"
+					},
+					"owned": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"item_id": {
+									"type": "string"
+								},
+								"item_type": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"required": [
+					"status",
+					"items",
+					"collections",
+					"slots",
+					"packs"
+				]
+			},
+			"PackReward": {
+				"type": "object",
+				"properties": {
+					"item_id": {
+						"type": "string"
+					},
+					"item_type": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "integer"
+					},
+					"is_duplicate": {
+						"type": "boolean"
+					},
+					"refunded": {
+						"type": "integer"
+					},
+					"rarity": {
+						"type": "integer",
+						"nullable": true
+					},
+					"asset_key": {
+						"type": "string",
+						"nullable": true
+					},
+					"image_url": {
+						"type": "string",
+						"format": "uri",
+						"nullable": true
+					}
+				},
+				"required": [
+					"item_id",
+					"item_type",
+					"title",
+					"price",
+					"is_duplicate",
+					"refunded"
+				]
+			},
+			"Settings": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					},
+					"bio": {
+						"type": "string",
+						"nullable": true
+					},
+					"github": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord": {
+						"type": "string",
+						"nullable": true
+					},
+					"twitter": {
+						"type": "string",
+						"nullable": true
+					},
+					"is_private": {
+						"type": "boolean"
+					},
+					"theme": {
+						"type": "string"
+					},
+					"lang": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"username",
+					"email",
+					"is_private",
+					"theme",
+					"lang"
+				]
+			},
+			"PublicRoom": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"title": {
+						"type": "string",
+						"nullable": true
+					},
+					"host_username": {
+						"type": "string"
+					},
+					"player_count": {
+						"type": "integer"
+					},
+					"max_players": {
+						"type": "integer"
+					},
+					"created_at": {
+						"type": "integer",
+						"description": "Unix timestamp"
+					},
+					"private": {
+						"type": "boolean"
+					},
+					"join_code": {
+						"type": "string",
+						"nullable": true
+					},
+					"mode": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"host_username",
+					"player_count",
+					"max_players",
+					"created_at",
+					"private",
+					"mode"
+				]
+			},
+			"FriendRequestItem": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"user_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"username": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"user_id",
+					"created_at"
+				]
+			},
+			"FriendItem": {
+				"type": "object",
+				"properties": {
+					"friend_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"username": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"friend_id",
+					"created_at"
+				]
+			},
+			"ChatMessage": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"sender_id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"content": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"sender_id",
+					"content",
+					"created_at"
+				]
+			},
+			"SocialStatusResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				]
+			},
+			"SocialErrorResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer"
+					},
+					"error": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"error"
+				]
+			}
+		}
+	}
+}

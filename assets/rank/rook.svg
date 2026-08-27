@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="#002b2b" stroke="#00CED1" stroke-width="4" stroke-linejoin="round"/>
+  <polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="none" stroke="#00CED1" stroke-width="2" stroke-linejoin="round" opacity="0.6"/>
+  <!-- Tour réduite -->
+  <g transform="translate(17.5, 17.5) scale(0.65)">
+    <path d="M 30,75 L 70,75 M 35,75 L 40,45 L 60,45 L 65,75 M 35,45 L 35,25 L 43,25 L 43,35 L 50,35 L 50,25 L 57,25 L 57,35 L 65,35 L 65,25 L 65,45" fill="none" stroke="#00CED1" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

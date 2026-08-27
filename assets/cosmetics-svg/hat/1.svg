@@ -1,0 +1,16 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+<defs><clipPath id="crownClip"><path d="M70,102 L70,86 L90,40 L110,66 L128,22 L146,66 L166,40 L186,86 L186,102 Z"/></clipPath></defs>
+<g clip-path="url(#crownClip)">
+  <path d="M70,102 L70,86 L90,40 L110,66 L128,22 L146,66 L166,40 L186,86 L186,102 Z" fill="#2c2c30"/>
+  <polygon points="70,102 70,86 90,40 98,70 84,102" fill="#111113" opacity="0.94"/>
+<polygon points="84,102 98,70 110,66 112,102" fill="#2c2c30" opacity="0.94"/>
+<polygon points="112,102 110,66 128,22 128,102" fill="#c9cbd1" opacity="0.94"/>
+<polygon points="128,102 128,22 146,66 144,102" fill="#2c2c30" opacity="0.94"/>
+<polygon points="144,102 146,66 166,40 172,102" fill="#111113" opacity="0.94"/>
+<polygon points="172,102 166,40 186,86 186,102" fill="#f2f3f6" opacity="0.94"/>
+</g>
+<path d="M70,102 L70,86 L90,40 L110,66 L128,22 L146,66 L166,40 L186,86 L186,102 Z" fill="none" stroke="#000000" stroke-width="3.5" stroke-linejoin="round"/>
+<circle cx="90" cy="40" r="4" fill="#f2f3f6"/>
+<circle cx="128" cy="22" r="5" fill="#f2f3f6"/>
+<circle cx="166" cy="40" r="4" fill="#f2f3f6"/>
+</svg>

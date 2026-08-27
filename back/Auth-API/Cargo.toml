@@ -1,0 +1,40 @@
+[package]
+name = "Auth"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+axum = "0.7"
+hyper = { version = "1", features = ["full"] }
+http = "1"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["trace", "cors", "compression-br"] }
+redis = { version = "0.25", features = ["tokio-comp"] }
+deadpool-redis = "0.15"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+futures = "0.3"
+uuid = { version = "1", features = ["v4", "serde"] }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid"] }
+chrono = { version = "0.4", features = ["serde"] }
+bcrypt = "0.15"
+dotenv = "0.15"
+jsonwebtoken = "9"
+once_cell = "1"
+thiserror = "1"
+rsa = { version = "0.9", features = ["sha2"] }
+sha2 = "0.10"
+argon2 = "0.5"
+rand = "0.8"
+hex = "0.4"
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+urlencoding = "2.1"
+dashmap = "5.5"
+hdrhistogram = "7.5"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+totp-rs = { version = "5.7.1", features = ["qr", "gen_secret"] }
+resend-rs = "0.28.0"
+api-core = { path = "../api-core" }
+log = "0.4.33"

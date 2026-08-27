@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+!.env.exemple
+google-key.json
+.DS_Store
+
+# build artifacts
+front/dist
+documentation/build
+documentation/node_modules
